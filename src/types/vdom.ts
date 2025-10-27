@@ -1,7 +1,7 @@
-import type { Component } from '../component.ts';
-import type { EventListeners } from '../events.ts';
-import { DOM_TYPES } from './consts.ts';
-import type { IEvent, IProp } from './types.ts';
+import type { Component } from '../component';
+import type { EventListeners } from '../events';
+import { DOM_TYPES } from './consts';
+import type { IEvent, IProp } from './types';
 
 export type DOMType = (typeof DOM_TYPES)[keyof typeof DOM_TYPES];
 

@@ -21,6 +21,8 @@ const config = [
           declarationDir: 'dist/types-temp',
           emitDeclarationOnly: false,
           declarationMap: false,
+          allowImportingTsExtensions: false,
+          noEmit: false,
         },
       }),
       cleanup(),
@@ -40,6 +42,63 @@ const config = [
       },
     ],
   },
+
+  {
+    input: 'src/jsx/jsx-runtime.ts',
+    plugins: [
+      nodeResolve({extensions: ['.js', '.ts', '.tsx']}),
+      commonjs(),
+      typescript({
+        tsconfig: './tsconfig.json',
+        sourceMap: false,
+        compilerOptions: {
+          declaration: true,
+          declarationDir: 'dist/jsx/types-temp',
+          emitDeclarationOnly: false,
+          declarationMap: false,
+          allowImportingTsExtensions: false,
+          noEmit: false,
+        },
+      }),
+      cleanup(),
+    ],
+    output: [
+      {
+        file: 'dist/jsx/jsx-runtime.js',
+        format: 'esm',
+        sourcemap: false,
+        plugins: [filesize()],
+      },
+    ],
+  },
+  {
+    input: 'src/jsx/jsx-dev-runtime.ts',
+    plugins: [
+      nodeResolve({extensions: ['.js', '.ts', '.tsx']}),
+      commonjs(),
+      typescript({
+        tsconfig: './tsconfig.json',
+        sourceMap: false,
+        compilerOptions: {
+          declaration: true,
+          declarationDir: 'dist/jsx/types-temp',
+          emitDeclarationOnly: false,
+          declarationMap: false,
+          allowImportingTsExtensions: false,
+          noEmit: false,
+        },
+      }),
+      cleanup(),
+    ],
+    output: [
+      {
+        file: 'dist/jsx/jsx-dev-runtime.js',
+        format: 'esm',
+        sourcemap: false,
+        plugins: [filesize()],
+      },
+    ],
+  },
   {
     input: 'dist/types-temp/index.d.ts',
     output: {
@@ -47,6 +106,22 @@ const config = [
       format: 'es',
     },
     plugins: [dts(), del({targets: ['dist/types-temp'], hook: 'writeBundle'})],
+  },
+  {
+    input: 'dist/jsx/types-temp/jsx/jsx-runtime.d.ts',
+    output: {
+      file: 'dist/jsx/jsx-runtime.d.ts',
+      format: 'es',
+    },
+    plugins: [dts()],
+  },
+  {
+    input: 'dist/jsx/types-temp/jsx/jsx-dev-runtime.d.ts',
+    output: {
+      file: 'dist/jsx/jsx-dev-runtime.d.ts',
+      format: 'es',
+    },
+    plugins: [dts(), del({targets: ['dist/jsx/types-temp'], hook: 'writeBundle'})],
   },
 ];
 
