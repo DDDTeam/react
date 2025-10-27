@@ -1,23 +1,6 @@
 {
   "name": "react",
   "version": "1.0.0",
-  "main": "dist/react.js",
-  "module": "dist/react.js",
-  "types": "dist/react.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
-    },
-    "./jsx-runtime": {
-      "types": "./dist/jsx/jsx-runtime.d.ts",
-      "import": "./dist/jsx/jsx-runtime.js"
-    },
-    "./jsx-dev-runtime": {
-      "types": "./dist/jsx/jsx-dev-runtime.d.ts",
-      "import": "./dist/jsx/jsx-dev-runtime.js"
-    }
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "type-check": "tsc --noEmit",

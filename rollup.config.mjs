@@ -8,6 +8,7 @@ import dts from 'rollup-plugin-dts';
 import del from 'rollup-plugin-delete';
 
 const config = [
+  // Main React build
   {
     input: 'src/index.ts',
     plugins: [
@@ -18,7 +19,7 @@ const config = [
         sourceMap: true,
         compilerOptions: {
           declaration: true,
-          declarationDir: 'dist/types-temp',
+          declarationDir: 'dist/types-temp', // билдим в промежуточную папку, чтобы все сбилдить в один файл в итоге
           emitDeclarationOnly: false,
           declarationMap: false,
           allowImportingTsExtensions: false,
@@ -43,6 +44,7 @@ const config = [
     ],
   },
 
+  // JSX runtimes
   {
     input: 'src/jsx/jsx-runtime.ts',
     plugins: [
@@ -53,7 +55,7 @@ const config = [
         sourceMap: false,
         compilerOptions: {
           declaration: true,
-          declarationDir: 'dist/jsx/types-temp',
+          declarationDir: 'dist/jsx/types-temp', // также билдим в промежуточную папку
           emitDeclarationOnly: false,
           declarationMap: false,
           allowImportingTsExtensions: false,
@@ -71,6 +73,8 @@ const config = [
       },
     ],
   },
+
+  // JSX dev runtime
   {
     input: 'src/jsx/jsx-dev-runtime.ts',
     plugins: [
@@ -99,26 +103,29 @@ const config = [
       },
     ],
   },
+  // Type definitions bundling
   {
     input: 'dist/types-temp/index.d.ts',
     output: {
-      file: 'dist/react.d.ts',
+      file: 'dist/react.d.ts', // собираем все промежуточные файлы в один react.js
       format: 'es',
     },
     plugins: [dts(), del({targets: ['dist/types-temp'], hook: 'writeBundle'})],
   },
+  // JSX runtime type definitions
   {
     input: 'dist/jsx/types-temp/jsx/jsx-runtime.d.ts',
     output: {
-      file: 'dist/jsx/jsx-runtime.d.ts',
+      file: 'dist/jsx/jsx-runtime.d.ts', // собираем все промежуточные файлы в jsx папку
       format: 'es',
     },
     plugins: [dts()],
   },
+  // JSX dev runtime type definitions
   {
     input: 'dist/jsx/types-temp/jsx/jsx-dev-runtime.d.ts',
     output: {
-      file: 'dist/jsx/jsx-dev-runtime.d.ts',
+      file: 'dist/jsx/jsx-dev-runtime.d.ts', // собираем все промежуточные файлы в jsx папку
       format: 'es',
     },
     plugins: [dts(), del({targets: ['dist/jsx/types-temp'], hook: 'writeBundle'})],
