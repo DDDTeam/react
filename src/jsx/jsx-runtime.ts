@@ -1,4 +1,4 @@
-import { h, hFragment, hString } from '../h.ts';
+import { h, hFragment, hString } from '../h';
 import type { IEvent, IProp, VDOMNode } from '../types';
 
 export const Fragment = Symbol('Fragment');

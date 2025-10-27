@@ -1,3 +1,3 @@
-export * from './consts.ts';
-export * from './types.ts';
-export * from './vdom.ts';
+export * from './consts';
+export * from './types';
+export * from './vdom';

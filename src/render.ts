@@ -1,4 +1,4 @@
-import { mountDOM } from './mount-dom.ts';
+import { mountDOM } from './mount-dom';
 import type { VDOMNode } from './types';
 
 export function render(vnode: VDOMNode, container: HTMLElement) {

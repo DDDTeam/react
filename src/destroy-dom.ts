@@ -1,4 +1,4 @@
-import { removeEventListeners } from './events.ts';
+import { removeEventListeners } from './events';
 import type {
 	ComponentVDOMNode,
 	ElementVDOMNode,

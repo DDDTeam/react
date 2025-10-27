@@ -1,16 +1,6 @@
-import { Component } from './component';
-import { createContext } from './context.ts';
-import { h, hFragment, hString } from './h';
-import { Fragment, jsx } from './jsx/jsx-runtime.ts';
-import { render } from './render.ts';
+import {Component} from './component';
+import {createContext} from './context';
+import {h, hFragment, hString} from './h';
+import {render} from './render';
 
-export {
-	Component,
-	createContext,
-	Fragment,
-	h,
-	hFragment,
-	hString,
-	jsx,
-	render,
-};
+export {Component, createContext, h, hFragment, hString, render};
