@@ -1,4 +1,3 @@
-import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import terser from '@rollup/plugin-terser';
@@ -13,7 +12,6 @@ const config = [
     input: 'src/index.ts',
     plugins: [
       nodeResolve({extensions: ['.js', '.ts', '.tsx']}),
-      commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
         sourceMap: true,
@@ -49,7 +47,6 @@ const config = [
     input: 'src/jsx/jsx-runtime.ts',
     plugins: [
       nodeResolve({extensions: ['.js', '.ts', '.tsx']}),
-      commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
         sourceMap: false,
@@ -71,6 +68,12 @@ const config = [
         sourcemap: false,
         plugins: [filesize()],
       },
+      {
+        file: 'dist/jsx/jsx-runtime.min.js',
+        format: 'esm',
+        sourcemap: false,
+        plugins: [terser(), filesize()],
+      },
     ],
   },
 
@@ -79,7 +82,6 @@ const config = [
     input: 'src/jsx/jsx-dev-runtime.ts',
     plugins: [
       nodeResolve({extensions: ['.js', '.ts', '.tsx']}),
-      commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
         sourceMap: false,
@@ -100,6 +102,12 @@ const config = [
         format: 'esm',
         sourcemap: false,
         plugins: [filesize()],
+      },
+      {
+        file: 'dist/jsx/jsx-dev-runtime.min.js',
+        format: 'esm',
+        sourcemap: false,
+        plugins: [terser(), filesize()],
       },
     ],
   },
