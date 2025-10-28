@@ -1,6 +1,6 @@
 {
   "name": "@robocotik/react",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "type-check": "tsc --noEmit",
@@ -30,6 +30,11 @@
       "import": "./dist/jsx/jsx-runtime.js",
       "require": "./dist/jsx/jsx-runtime.js",
       "types": "./dist/jsx/jsx-runtime.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./dist/jsx/jsx-dev-runtime.js",
+      "require": "./dist/jsx/jsx-dev-runtime.js",
+      "types": "./dist/jsx/jsx-dev-runtime.d.ts"
     }
   },
   "license": "ISC",
