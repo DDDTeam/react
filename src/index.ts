@@ -4,4 +4,6 @@ import {h, hFragment, hString} from './h';
 import {render} from './render';
 import type {VDOMNode} from './types';
 
-export {Component, createContext, h, hFragment, hString, render, VDOMNode};
+export type {VDOMNode};
+
+export {Component, createContext, h, hFragment, hString, render};
