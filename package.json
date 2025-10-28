@@ -12,13 +12,24 @@
     "react",
     "ddd",
     "library",
-    "frontend"
+    "frontend",
+    "typescript"
   ],
   "author": "Robocotik",
+  "main": "dist/react.js",
+  "types": "dist/react.d.ts",
+  "typings": "dist/react.d.ts",
+  "module": "dist/react.js",
+  "exports": {
+    ".": {
+      "import": "./dist/react.js",
+      "require": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    }
+  },
   "license": "ISC",
   "description": "The minimalistic React-like library made by DDD team",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.4",
