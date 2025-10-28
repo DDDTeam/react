@@ -1,5 +1,5 @@
 {
-  "name": "react",
+  "name": "@robocotik/react",
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -8,10 +8,15 @@
     "build:watch": "npm run type-check && rollup -c -w",
     "dev": "npm run type-check && rollup -c -w --serve"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "react",
+    "ddd",
+    "library",
+    "frontend"
+  ],
+  "author": "Robocotik",
   "license": "ISC",
-  "description": "",
+  "description": "The minimalistic React-like library made by DDD team",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.2",
@@ -29,5 +34,9 @@
   "dependencies": {
     "@guanghechen/fast-deep-equal": "^2.3.7",
     "tslib": "^2.8.1"
-  }
+  },
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ]
 }
