@@ -45,11 +45,11 @@
     "rollup-plugin-delete": "^3.0.1",
     "rollup-plugin-dts": "^6.2.3",
     "rollup-plugin-filesize": "^10.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "tslib": "^2.8.1"
   },
   "dependencies": {
-    "@guanghechen/fast-deep-equal": "^2.3.7",
-    "tslib": "^2.8.1"
+    "@guanghechen/fast-deep-equal": "^2.3.7"
   },
   "files": [
     "dist/**/*",
