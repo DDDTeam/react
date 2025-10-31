@@ -146,7 +146,9 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
   }
 
   setContext(context: C): void {
-    this.contextValue = context;
-    this.patch();
+    if (this.isMounted) {
+      this.contextValue = context;
+      this.patch();
+    }
   }
 }
