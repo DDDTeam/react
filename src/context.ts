@@ -77,9 +77,7 @@ export function createContext<T extends ContextValue>(defaultValue: T): Context<
     }
 
     onWillUnmount(): void {
-      console.log('Consumer: before will unmount', this.constructor.name, subscribers.size);
       unsubscribe(this);
-      console.log('Consumer: after will unmount', this.constructor.name, subscribers.size);
     }
 
     render(): VDOMNode {
