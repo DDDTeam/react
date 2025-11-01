@@ -150,7 +150,7 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
       this.contextValue = context;
       this.patch();
     } else {
-      console.log(`SetContext: trying to set context to unmounted (${this.toString()})`);
+      console.log(`SetContext: trying to set context to unmounted (${this.constructor.name})`);
     }
   }
 }
