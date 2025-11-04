@@ -45,7 +45,6 @@ function setClass(el: HTMLElement, className: string | string[]): void {
 }
 
 export function setAttribute(el: HTMLElement, name: string, value: unknown): void {
-  console.log('для компонента', el, 'устанавливаем атрибут', name, 'со значением', value);
   if (value == null) {
     removeAttribute(el, name);
   } else {

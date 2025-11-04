@@ -31,7 +31,6 @@ export function jsx(tag: unknown, props?: IProp, ...children: Array<Child | Chil
 
   if (props) {
     Object.entries(props).forEach(([key, value]) => {
-      console.log('key', key);
       if (key.startsWith('on') && typeof value === 'function') {
         const eventName = key.slice(2).toLowerCase();
         (events as Record<string, Function>)[eventName] = value as Function;
