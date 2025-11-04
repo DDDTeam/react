@@ -27,8 +27,16 @@ export function setAttributes(el: HTMLElement, attrs: ElementAttributes): void {
 }
 
 function setClass(el: HTMLElement, className: string | string[]): void {
+  if (el instanceof SVGElement) {
+    el.removeAttribute('class');
+    if (typeof className === 'string') {
+      el.setAttribute('class', className);
+    } else if (Array.isArray(className)) {
+      el.classList.add(...className);
+    }
+    return;
+  }
   el.className = '';
-
   if (typeof className === 'string') {
     el.className = className;
   } else if (Array.isArray(className)) {
@@ -37,6 +45,7 @@ function setClass(el: HTMLElement, className: string | string[]): void {
 }
 
 export function setAttribute(el: HTMLElement, name: string, value: unknown): void {
+  console.log('для компонента', el, 'устанавливаем атрибут', name, 'со значением', value);
   if (value == null) {
     removeAttribute(el, name);
   } else {
