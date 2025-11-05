@@ -79,6 +79,18 @@ export function jsx(tag: unknown, props?: IProp, ...children: Array<Child | Chil
         attributes['class'] = value;
       } else if (key === 'style' && typeof value === 'object') {
         attributes['style'] = value;
+      } else if (key === 'colorInterpolationFilters') {
+        attributes['color-interpolation-filters'] = value;
+      } else if (key === 'filterUnits') {
+        attributes['filterUnits'] = value;
+      } else if (key === 'clipPath') {
+        attributes['clip-path'] = value;
+      } else if (key === 'floodOpacity') {
+        attributes['flood-opacity'] = value;
+      } else if (key === 'stdDeviation') {
+        attributes['stdDeviation'] = value;
+      } else if (key === 'viewbox') {
+        attributes['viewBox'] = value;
       } else if (key !== 'children' && key !== 'key') {
         attributes[key] = value;
       }
