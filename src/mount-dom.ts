@@ -73,12 +73,15 @@ function createElementNode(
   hostComponent: Component | null,
 ): void {
   const {tag, children} = vdom;
-  const element = document.createElement(tag);
-  addProps(element, vdom, hostComponent);
-  vdom.el = element;
+  const isSvg = tag === 'svg' || parentEl instanceof SVGElement;
+  const element = isSvg
+    ? document.createElementNS('http://www.w3.org/2000/svg', tag)
+    : document.createElement(tag);
+  addProps(element as HTMLElement, vdom, hostComponent);
+  vdom.el = element as HTMLElement;
 
   children?.forEach(child => {
-    mountDOM(child, element, null, hostComponent);
+    mountDOM(child, element as HTMLElement, null, hostComponent);
   });
 
   insert(element, parentEl, index);
