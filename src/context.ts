@@ -50,6 +50,11 @@ export function createContext<T extends ContextValue>(defaultValue: T): Context<
         });
       }
     }
+    onWillUnmount(): void {
+      subscribers.forEach(subscriber => {
+        unsubscribe(subscriber);
+      });
+    }
 
     render(): VDOMNode {
       let children: VDOMNode[] = [];
@@ -67,13 +72,12 @@ export function createContext<T extends ContextValue>(defaultValue: T): Context<
   }
 
   class Consumer extends Component<ConsumerProps<T>> {
-    constructor(props: ConsumerProps<T>) {
-      super(props);
-      subscribers.add(this as any);
+    onMount(): void | Promise<void> {
+      subscribe(this);
     }
 
     onWillUnmount(): void {
-      subscribers.delete(this as any);
+      unsubscribe(this);
     }
 
     render(): VDOMNode {

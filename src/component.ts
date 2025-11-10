@@ -115,7 +115,7 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
 
   unmount(): void {
     if (!this.isMounted) {
-      throw new Error('Component is not mounted');
+      return;
     }
 
     const constructor = this.constructor as typeof Component & {
@@ -137,7 +137,7 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
 
   private patch(): void {
     if (!this.isMounted || !this.hostEl || !this.vdom) {
-      throw new Error('Component is not mounted');
+      return;
     }
 
     const vdom = this.render();
@@ -146,7 +146,9 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
   }
 
   setContext(context: C): void {
-    this.contextValue = context;
-    this.patch();
+    if (this.isMounted) {
+      this.contextValue = context;
+      this.patch();
+    }
   }
 }
