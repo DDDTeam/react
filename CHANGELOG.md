@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/DDDTeam/react/compare/v1.1.0...v1.2.0) (2025-11-11)
+
+
+### Features
+
+* refactor context to hostEl logic ([8577e3a](https://github.com/DDDTeam/react/commit/8577e3a089ebb1dbda81e9241e55e1d54da28ffb))
+
 # [1.1.0](https://github.com/DDDTeam/react/compare/v1.0.0...v1.1.0) (2025-11-10)
 
 
