@@ -32,7 +32,7 @@ export function mountDOM(
       break;
     }
     case DOM_TYPES.COMPONENT: {
-      createComponentNode(vdom as ComponentVDOMNode, parentEl, index);
+      createComponentNode(vdom as ComponentVDOMNode, parentEl, index, hostComponent);
       const component = (vdom as ComponentVDOMNode).component;
       if (component) {
         enqueueJob(() => component.onMount());
@@ -97,10 +97,11 @@ function createComponentNode(
   vdom: ComponentVDOMNode,
   parentEl: HTMLElement,
   index: number | null,
+  hostEl: Component | null,
 ): void {
   const ComponentClass = vdom.tag;
   const {props} = extractPropsAndEvents(vdom);
-  const component = new ComponentClass(props);
+  const component = new ComponentClass(props, hostEl);
   component.mount(parentEl, index);
   vdom.component = component;
   vdom.el = component.firstElement || null;

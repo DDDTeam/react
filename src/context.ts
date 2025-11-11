@@ -1,61 +1,14 @@
-import isEqual from '@guanghechen/fast-deep-equal';
 import {Component} from './component';
 import {hFragment} from './h';
-import type {ContextValue, VDOMNode} from './types';
+import type {Context, VDOMNode} from './types';
 
-export interface ProviderProps<T extends ContextValue> {
-  value: T;
-  children?: VDOMNode | VDOMNode[];
-}
-
-export interface ConsumerProps<T extends ContextValue> {
-  children: ((value: T) => VDOMNode | VDOMNode[]) | VDOMNode[];
-}
-
-export interface Context<T extends ContextValue> {
-  Provider: typeof Component;
-  Consumer: typeof Component;
-  value: T;
-  subscribe: (comp: Component) => void;
-  unsubscribe: (comp: Component) => void;
-}
-
-export function createContext<T extends ContextValue>(defaultValue: T): Context<T> {
-  let value: T = defaultValue;
-  const subscribers = new Set<Component>();
-
-  function subscribe(comp: Component): void {
-    subscribers.add(comp);
+export function createContext<T>(defaultValue: T): Context<T> {
+  interface ProviderProps {
+    value: T;
+    children?: VDOMNode | VDOMNode[];
   }
 
-  function unsubscribe(comp: Component): void {
-    subscribers.delete(comp);
-  }
-
-  class Provider extends Component<ProviderProps<T>> {
-    onUpdate(): void {
-      if (!isEqual(value, this.props.value)) {
-        value = this.props.value;
-        subscribers.forEach(subscriber => {
-          subscriber.setContext(value as {});
-        });
-      }
-    }
-
-    onMount(): void {
-      if (!isEqual(value, this.props.value)) {
-        value = this.props.value;
-        subscribers.forEach(subscriber => {
-          subscriber.setContext(value as {});
-        });
-      }
-    }
-    onWillUnmount(): void {
-      subscribers.forEach(subscriber => {
-        unsubscribe(subscriber);
-      });
-    }
-
+  class Provider extends Component<ProviderProps> {
     render(): VDOMNode {
       let children: VDOMNode[] = [];
 
@@ -71,15 +24,7 @@ export function createContext<T extends ContextValue>(defaultValue: T): Context<
     }
   }
 
-  class Consumer extends Component<ConsumerProps<T>> {
-    onMount(): void | Promise<void> {
-      subscribe(this);
-    }
-
-    onWillUnmount(): void {
-      unsubscribe(this);
-    }
-
+  class Consumer extends Component {
     render(): VDOMNode {
       let children = this.props.children;
 
@@ -94,17 +39,13 @@ export function createContext<T extends ContextValue>(defaultValue: T): Context<
       if (typeof children !== 'function') {
         throw new Error('Consumer: children is not a function');
       }
-
-      const result = children(value);
-      return Array.isArray(result) ? hFragment(result) : result;
+      return children(this.context);
     }
   }
 
   return {
-    Provider: Provider as typeof Component,
-    Consumer: Consumer as typeof Component,
-    value,
-    subscribe,
-    unsubscribe,
+    Provider,
+    Consumer,
+    defaultValue,
   };
 }
