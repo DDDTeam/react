@@ -16,8 +16,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   public props: P & WithChildrenProps;
   public state: S = {} as S;
+  F;
 
-  constructor(props = {} as P, parentComponent: Component | null) {
+  constructor(props = {} as P, parentComponent?: Component | null) {
     this.props = props as P & WithChildrenProps;
     this.parent = parentComponent;
   }
@@ -94,7 +95,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   updateProps(props: Partial<P>): void {
     const newProps = {...this.props, ...props};
     const isContextUpdated = this.updateContext();
-    if (isEqual(this.props, newProps) || !isContextUpdated) {
+    if (isEqual(this.props, newProps) && !isContextUpdated) {
       return;
     }
     this.props = newProps;
