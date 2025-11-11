@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/DDDTeam/react/compare/v1.3.3...v1.3.4) (2025-11-11)
+
+
+### Bug Fixes
+
+* rename to ComponentType ([dc47147](https://github.com/DDDTeam/react/commit/dc47147d53a45262904a27d8184dc60009eb7239))
+
 ## [1.3.3](https://github.com/DDDTeam/react/compare/v1.3.2...v1.3.3) (2025-11-11)
 
 
