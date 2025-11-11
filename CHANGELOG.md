@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/DDDTeam/react/compare/v1.2.1...v1.3.0) (2025-11-11)
+
+
+### Features
+
+* fix context ([d84f734](https://github.com/DDDTeam/react/commit/d84f734607d69dd459a9a9a2d8f45005a12c3956))
+
 ## [1.2.1](https://github.com/DDDTeam/react/compare/v1.2.0...v1.2.1) (2025-11-11)
 
 
