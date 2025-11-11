@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/DDDTeam/react/compare/v1.3.1...v1.3.2) (2025-11-11)
+
+
+### Bug Fixes
+
+* types : add ComponentConstructor to export ([19fade9](https://github.com/DDDTeam/react/commit/19fade9ceba0c4711ab3c2ebfad4f4069684a8c7))
+
 ## [1.3.1](https://github.com/DDDTeam/react/compare/v1.3.0...v1.3.1) (2025-11-11)
 
 
