@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/DDDTeam/react/compare/v1.3.0...v1.3.1) (2025-11-11)
+
+
+### Bug Fixes
+
+* remove console.log ([b2db627](https://github.com/DDDTeam/react/commit/b2db6270b1a6f15530d989741ade283cc3798f44))
+
 # [1.3.0](https://github.com/DDDTeam/react/compare/v1.2.1...v1.3.0) (2025-11-11)
 
 
