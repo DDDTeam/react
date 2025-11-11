@@ -61,7 +61,7 @@ export interface WithChildrenProps {
   children?: VDOMNode[] | VDOMNode | string | Function;
 }
 
-export type ComponentConstructor<Props = any, ComponentState = any, Context = any> = new (
+export type ComponentType<Props = any, ComponentState = any, Context = any> = new (
   props: Props,
   parentComponent: Component<{}, any, null> | null,
 ) => Component<Props, ComponentState, Context>;
