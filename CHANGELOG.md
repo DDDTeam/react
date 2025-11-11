@@ -1,3 +1,11 @@
+## [1.2.1](https://github.com/DDDTeam/react/compare/v1.2.0...v1.2.1) (2025-11-11)
+
+
+### Bug Fixes
+
+* add unnessacary parentComponent + rules of update ([617b7ef](https://github.com/DDDTeam/react/commit/617b7ef2bd30178481d7eb63ee72dad43a132328))
+* remove "f" ([5581515](https://github.com/DDDTeam/react/commit/5581515e5115cfe72c0755820a90a70b0798e168))
+
 # [1.2.0](https://github.com/DDDTeam/react/compare/v1.1.0...v1.2.0) (2025-11-11)
 
 
