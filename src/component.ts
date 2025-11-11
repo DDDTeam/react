@@ -16,7 +16,6 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   public props: P & WithChildrenProps;
   public state: S = {} as S;
-  F;
 
   constructor(props = {} as P, parentComponent?: Component | null) {
     this.props = props as P & WithChildrenProps;
