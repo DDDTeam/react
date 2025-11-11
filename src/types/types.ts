@@ -1,3 +1,4 @@
+import type { Component } from '../component.ts';
 import type { VDOMNode } from './';
 import { ARRAY_DIFF_OP } from './consts';
 
@@ -59,3 +60,7 @@ export type Unsubscribe = () => void;
 export interface WithChildrenProps {
 	children?: VDOMNode[] | VDOMNode | string | Function;
 }
+
+export type ComponentConstructor<Props = any, ComponentState = any, Context = any> = new (
+  props: Props,
+) => Component<Props, ComponentState, Context>;
