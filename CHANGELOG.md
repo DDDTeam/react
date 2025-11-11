@@ -1,3 +1,10 @@
+## [1.3.5](https://github.com/DDDTeam/react/compare/v1.3.4...v1.3.5) (2025-11-11)
+
+
+### Bug Fixes
+
+* remove unsused code ([faacff7](https://github.com/DDDTeam/react/commit/faacff7d040915b4fb9792f8171ac494e268817f))
+
 ## [1.3.4](https://github.com/DDDTeam/react/compare/v1.3.3...v1.3.4) (2025-11-11)
 
 
