@@ -34,14 +34,12 @@ export function h(
 ): ElementVDOMNode | ComponentVDOMNode {
   const type = typeof tag === 'string' ? DOM_TYPES.ELEMENT : DOM_TYPES.COMPONENT;
 
-  const vdom: ElementVDOMNode | ComponentVDOMNode = {
+  return {
     tag,
     props,
     type,
     children: mapTextNodes(withoutNulls(children)),
   } as ElementVDOMNode | ComponentVDOMNode;
-
-  return vdom;
 }
 
 export function hString(str: string): TextVDOMNode {
