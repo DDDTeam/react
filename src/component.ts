@@ -3,27 +3,23 @@ import {extractChildren} from './h.js';
 import {mountDOM} from './mount-dom.js';
 import {patchDOM} from './patch-dom.js';
 import {enqueueJob} from './scheduler.js';
-import type {ComponentState, Context, ContextValue, VDOMNode, WithChildrenProps} from './types';
+import type {ComponentState, Context, VDOMNode, WithChildrenProps} from './types';
 import {DOM_TYPES} from './types';
 import isEqual from '@guanghechen/fast-deep-equal';
 
-export abstract class Component<P = {}, S = ComponentState, C extends ContextValue = any> {
+export abstract class Component<P = {}, S = ComponentState, ContextValueType = null> {
   private isMounted = false;
   private vdom: VDOMNode | null = null;
   private hostEl: HTMLElement | null = null;
-  private contextValue: C = {} as C;
+  public context: ContextValueType = null as ContextValueType;
+  public parent: Component | null = null;
 
   public props: P & WithChildrenProps;
   public state: S = {} as S;
 
-  static contextType?: Context;
-
-  get context(): C {
-    return this.contextValue;
-  }
-
-  constructor(props = {} as P) {
+  constructor(props = {} as P, parentComponent: Component | null) {
     this.props = props as P & WithChildrenProps;
+    this.parent = parentComponent;
   }
 
   onMount(): void | Promise<void> {
@@ -72,9 +68,33 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
     return 0;
   }
 
+  private updateContext() {
+    const context = Object.getPrototypeOf(this).constructor
+      .contextType as Context<ContextValueType>;
+
+    let curVNode: Component | null | undefined = this.parent;
+    if (context != null) {
+      while (curVNode) {
+        if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
+          this.context = (curVNode as any).props.value as ContextValueType;
+          return true;
+        }
+
+        curVNode = curVNode.parent;
+      }
+
+      if (curVNode == null) {
+        this.context = context.defaultValue;
+      }
+    }
+
+    return false;
+  }
+
   updateProps(props: Partial<P>): void {
     const newProps = {...this.props, ...props};
-    if (isEqual(this.props, newProps)) {
+    const isContextUpdated = this.updateContext();
+    if (isEqual(this.props, newProps) || !isContextUpdated) {
       return;
     }
     this.props = newProps;
@@ -97,16 +117,7 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
     if (this.isMounted) {
       throw new Error('Component is already mounted');
     }
-
-    const constructor = this.constructor as typeof Component & {
-      contextType?: Context<C>;
-    };
-
-    if (constructor.contextType != null) {
-      this.contextValue = constructor.contextType.value;
-      constructor.contextType.subscribe(this as Component);
-    }
-
+    this.updateContext();
     this.vdom = this.render();
     mountDOM(this.vdom, hostEl, index, this as Component);
     this.hostEl = hostEl;
@@ -117,11 +128,6 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
     if (!this.isMounted) {
       return;
     }
-
-    const constructor = this.constructor as typeof Component & {
-      contextType?: Context<C>;
-    };
-    constructor.contextType?.unsubscribe(this as Component);
 
     enqueueJob(() => this.onWillUnmount());
 
@@ -143,12 +149,5 @@ export abstract class Component<P = {}, S = ComponentState, C extends ContextVal
     const vdom = this.render();
     this.vdom = patchDOM(this.vdom, vdom, this.hostEl, this as Component);
     enqueueJob(() => this.onUpdate());
-  }
-
-  setContext(context: C): void {
-    if (this.isMounted) {
-      this.contextValue = context;
-      this.patch();
-    }
   }
 }
