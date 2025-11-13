@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/DDDTeam/react/compare/v1.4.0...v1.4.1) (2025-11-13)
+
+
+### Bug Fixes
+
+* change interface of refs ([4cd10aa](https://github.com/DDDTeam/react/commit/4cd10aafd1f53df3f1d72817529bf1ec0632737a))
+
 # [1.4.0](https://github.com/DDDTeam/react/compare/v1.3.5...v1.4.0) (2025-11-13)
 
 
