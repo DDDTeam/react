@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/DDDTeam/react/compare/v1.4.1...v1.4.2) (2025-11-13)
+
+
+### Bug Fixes
+
+* ref: add null as current value prop ([fa70194](https://github.com/DDDTeam/react/commit/fa70194f3a4bcc8256d88140dc6e88953f558540))
+
 ## [1.4.1](https://github.com/DDDTeam/react/compare/v1.4.0...v1.4.1) (2025-11-13)
 
 
