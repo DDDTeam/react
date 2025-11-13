@@ -1,8 +1,8 @@
 export interface Ref<T = unknown> {
-  current: T;
+  current: T | null;
 }
 
-export function createRef<T = unknown>(initialValue: T): Ref<T> {
+export function createRef<T = unknown>(initialValue: T = null): Ref<T> {
   return {
     current: initialValue,
   };
