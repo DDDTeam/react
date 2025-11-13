@@ -1,69 +1,74 @@
-import { removeEventListeners } from './events';
+import {removeEventListeners} from './events';
 import type {
-	ComponentVDOMNode,
-	ElementVDOMNode,
-	FragmentVDOMNode,
-	TextVDOMNode,
-	VDOMNode,
+  ComponentVDOMNode,
+  ElementVDOMNode,
+  FragmentVDOMNode,
+  TextVDOMNode,
+  VDOMNode,
 } from './types';
-import { DOM_TYPES } from './types';
+import {DOM_TYPES} from './types';
 
 export function destroyDOM(vdom: VDOMNode): void {
-	const { type } = vdom;
+  const {type} = vdom;
 
-	switch (type) {
-		case DOM_TYPES.TEXT: {
-			removeTextNode(vdom as TextVDOMNode);
-			break;
-		}
-		case DOM_TYPES.ELEMENT: {
-			removeElementNode(vdom as ElementVDOMNode);
-			break;
-		}
-		case DOM_TYPES.FRAGMENT: {
-			removeFragmentNodes(vdom as FragmentVDOMNode);
-			break;
-		}
-		case DOM_TYPES.COMPONENT: {
-			(vdom as ComponentVDOMNode).component?.unmount();
-			break;
-		}
-		default: {
-			throw new Error(`Can't destroy DOM of type: ${type}`);
-		}
-	}
+  switch (type) {
+    case DOM_TYPES.TEXT: {
+      removeTextNode(vdom as TextVDOMNode);
+      break;
+    }
+    case DOM_TYPES.ELEMENT: {
+      removeElementNode(vdom as ElementVDOMNode);
+      break;
+    }
+    case DOM_TYPES.FRAGMENT: {
+      removeFragmentNodes(vdom as FragmentVDOMNode);
+      break;
+    }
+    case DOM_TYPES.COMPONENT: {
+      (vdom as ComponentVDOMNode).component?.unmount();
+      break;
+    }
+    default: {
+      throw new Error(`Can't destroy DOM of type: ${type}`);
+    }
+  }
 
-	delete (vdom as any).el;
+  delete (vdom as any).el;
 }
 
 function removeTextNode(vdom: TextVDOMNode): void {
-	const { el } = vdom;
-	if (el) {
-		el.remove();
-	}
+  const {el} = vdom;
+  if (el) {
+    el.remove();
+  }
 }
 
 function removeElementNode(vdom: ElementVDOMNode): void {
-	const { el, children, listeners } = vdom;
+  const {el, children, listeners, props} = vdom;
 
-	if (el) {
-		el.remove();
-	}
+  // Очищаем ref, если он есть
+  if (props?.ref && typeof props.ref === 'object' && 'current' in props.ref) {
+    (props.ref as {current: HTMLElement | null}).current = null;
+  }
 
-	if (children) {
-		children.forEach(destroyDOM);
-	}
+  if (el) {
+    el.remove();
+  }
 
-	if (listeners && el) {
-		removeEventListeners(listeners, el);
-		delete (vdom as any).listeners;
-	}
+  if (children) {
+    children.forEach(destroyDOM);
+  }
+
+  if (listeners && el) {
+    removeEventListeners(listeners, el);
+    delete (vdom as any).listeners;
+  }
 }
 
 function removeFragmentNodes(vdom: FragmentVDOMNode): void {
-	const { children } = vdom;
+  const {children} = vdom;
 
-	if (children) {
-		children.forEach(destroyDOM);
-	}
+  if (children) {
+    children.forEach(destroyDOM);
+  }
 }

@@ -112,12 +112,33 @@ function patchAttrs(
   oldAttrs: Record<string, unknown> = {},
   newAttrs: Record<string, unknown> = {},
 ): void {
-  const {added, removed, updated} = objectsDiff(oldAttrs, newAttrs);
+  // Обрабатываем ref отдельно
+  const oldRef = oldAttrs.ref;
+  const newRef = newAttrs.ref;
+
+  if (oldRef !== newRef) {
+    // Очищаем старый ref
+    if (oldRef && typeof oldRef === 'object' && 'current' in oldRef) {
+      (oldRef as {current: HTMLElement | null}).current = null;
+    }
+    // Устанавливаем новый ref
+    if (newRef && typeof newRef === 'object' && 'current' in newRef) {
+      (newRef as {current: HTMLElement | null}).current = el;
+    }
+  }
+
+  // Убираем ref из attrs для обработки остальных атрибутов
+  const oldAttrsWithoutRef = {...oldAttrs};
+  const newAttrsWithoutRef = {...newAttrs};
+  delete oldAttrsWithoutRef.ref;
+  delete newAttrsWithoutRef.ref;
+
+  const {added, removed, updated} = objectsDiff(oldAttrsWithoutRef, newAttrsWithoutRef);
   for (const attr of removed) {
     removeAttribute(el, attr);
   }
   for (const attr of added.concat(updated)) {
-    setAttribute(el, attr, newAttrs[attr]);
+    setAttribute(el, attr, newAttrsWithoutRef[attr]);
   }
 }
 

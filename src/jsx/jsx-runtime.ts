@@ -34,6 +34,8 @@ export function jsx(tag: unknown, props?: IProp, ...children: Array<Child | Chil
       if (key.startsWith('on') && typeof value === 'function') {
         const eventName = key.slice(2).toLowerCase();
         (events as Record<string, Function>)[eventName] = value as Function;
+      } else if (key === 'ref') {
+        attributes['ref'] = value;
       } else if (key === 'className') {
         attributes['class'] = value;
       } else if (key === 'style' && typeof value === 'object') {
@@ -75,6 +77,8 @@ export function jsx(tag: unknown, props?: IProp, ...children: Array<Child | Chil
       if (key.startsWith('on') && typeof value === 'function') {
         const eventName = key.slice(2).toLowerCase();
         (events as Record<string, Function>)[eventName] = value as Function;
+      } else if (key === 'ref') {
+        attributes['ref'] = value;
       } else if (key === 'className') {
         attributes['class'] = value;
       } else if (key === 'style' && typeof value === 'object') {
