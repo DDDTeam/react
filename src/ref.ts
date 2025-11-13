@@ -1,9 +1,9 @@
-export interface Ref<T = HTMLElement> {
-	current: T | null;
+export interface Ref<T = unknown> {
+  current: T;
 }
 
-export function createRef<T = HTMLElement>(): Ref<T> {
-	return {
-		current: null,
-	};
+export function createRef<T = unknown>(initialValue: T): Ref<T> {
+  return {
+    current: initialValue,
+  };
 }
