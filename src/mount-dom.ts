@@ -92,10 +92,8 @@ function createElementNode(
 function addProps(el: HTMLElement, vdom: ElementVDOMNode, hostComponent: Component | null): void {
   const {props: attrs, events} = extractPropsAndEvents(vdom);
 
-  // Обрабатываем ref до установки остальных атрибутов
   if (attrs.ref && typeof attrs.ref === 'object' && 'current' in attrs.ref) {
-    (attrs.ref as {current: HTMLElement | null}).current = el;
-    // Удаляем ref из attrs, чтобы не устанавливать как HTML-атрибут
+    (attrs.ref as {current: unknown}).current = el;
     delete attrs.ref;
   }
 

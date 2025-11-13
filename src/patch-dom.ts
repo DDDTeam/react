@@ -112,22 +112,19 @@ function patchAttrs(
   oldAttrs: Record<string, unknown> = {},
   newAttrs: Record<string, unknown> = {},
 ): void {
-  // Обрабатываем ref отдельно
   const oldRef = oldAttrs.ref;
   const newRef = newAttrs.ref;
 
   if (oldRef !== newRef) {
-    // Очищаем старый ref
     if (oldRef && typeof oldRef === 'object' && 'current' in oldRef) {
-      (oldRef as {current: HTMLElement | null}).current = null;
+      (oldRef as {current: unknown}).current = null;
     }
-    // Устанавливаем новый ref
+
     if (newRef && typeof newRef === 'object' && 'current' in newRef) {
-      (newRef as {current: HTMLElement | null}).current = el;
+      (newRef as {current: unknown}).current = el;
     }
   }
 
-  // Убираем ref из attrs для обработки остальных атрибутов
   const oldAttrsWithoutRef = {...oldAttrs};
   const newAttrsWithoutRef = {...newAttrs};
   delete oldAttrsWithoutRef.ref;

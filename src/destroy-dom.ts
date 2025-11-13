@@ -46,9 +46,8 @@ function removeTextNode(vdom: TextVDOMNode): void {
 function removeElementNode(vdom: ElementVDOMNode): void {
   const {el, children, listeners, props} = vdom;
 
-  // Очищаем ref, если он есть
   if (props?.ref && typeof props.ref === 'object' && 'current' in props.ref) {
-    (props.ref as {current: HTMLElement | null}).current = null;
+    (props.ref as {current: unknown}).current = null;
   }
 
   if (el) {
