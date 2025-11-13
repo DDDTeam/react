@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/DDDTeam/react/compare/v1.3.5...v1.4.0) (2025-11-13)
+
+
+### Features
+
+* aadd createRef ([42dfa69](https://github.com/DDDTeam/react/commit/42dfa6982c12c7ce39e7f2b5355da02d53879824))
+
 ## [1.3.5](https://github.com/DDDTeam/react/compare/v1.3.4...v1.3.5) (2025-11-11)
 
 
