@@ -17,6 +17,7 @@ import type {
   ElementAttributes,
   ElementVDOMNode,
   IProp,
+  PortalVDOMNode,
   TextVDOMNode,
   VDOMNode,
 } from './types';
@@ -48,6 +49,10 @@ export function patchDOM(
     }
     case DOM_TYPES.COMPONENT: {
       patchComponent(oldVdom as ComponentVDOMNode, newVdom as ComponentVDOMNode);
+      break;
+    }
+    case DOM_TYPES.PORTAL: {
+      patchPortal(oldVdom as PortalVDOMNode, newVdom as PortalVDOMNode, hostComponent);
       break;
     }
   }
@@ -254,4 +259,18 @@ function patchComponent(oldVdom: ComponentVDOMNode, newVdom: ComponentVDOMNode) 
   component.updateProps(props);
   newVdom.component = component;
   newVdom.el = component.firstElement;
+}
+
+function patchPortal(
+  oldVdom: PortalVDOMNode,
+  newVdom: PortalVDOMNode,
+  hostComponent: Component | null,
+) {
+  if (oldVdom.container !== newVdom.container) {
+    destroyDOM(oldVdom as VDOMNode);
+    mountDOM(newVdom as VDOMNode, document.body, null, hostComponent);
+    return;
+  }
+
+  patchChildren(oldVdom as VDOMNode, newVdom as VDOMNode, hostComponent);
 }

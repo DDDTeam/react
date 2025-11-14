@@ -54,9 +54,6 @@ export interface ComponentState {
   [key: string]: unknown;
 }
 
-export type CommandHandler<T = any> = (payload: T) => void;
-export type AfterCommandHandler = () => void;
-export type Unsubscribe = () => void;
 export interface WithChildrenProps {
   children?: VDOMNode[] | VDOMNode | string | Function;
 }
