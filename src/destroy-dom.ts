@@ -31,6 +31,7 @@ export function destroyDOM(vdom: VDOMNode): void {
     }
     case DOM_TYPES.PORTAL: {
       removePortalNode(vdom as PortalVDOMNode);
+      break;
     }
     default: {
       throw new Error(`Can't destroy DOM of type: ${type}`);
