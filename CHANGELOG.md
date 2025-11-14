@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/DDDTeam/react/compare/v1.5.0...v1.5.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* hotfix add break ([ec88528](https://github.com/DDDTeam/react/commit/ec88528e5e72c7c5ac799799c0b53440ccf6715e))
+
 # [1.5.0](https://github.com/DDDTeam/react/compare/v1.4.2...v1.5.0) (2025-11-14)
 
 
