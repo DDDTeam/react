@@ -3,6 +3,7 @@ import type {
   ComponentVDOMNode,
   ElementVDOMNode,
   FragmentVDOMNode,
+  PortalVDOMNode,
   TextVDOMNode,
   VDOMNode,
 } from './types';
@@ -55,6 +56,18 @@ export function hFragment(vNodes: (VDOMNode | string | null | undefined)[]): Fra
     type: DOM_TYPES.FRAGMENT,
     children: mapTextNodes(withoutNulls(vNodes)),
     props: {},
+  };
+}
+
+export function hPortal(
+  vNodes: (VDOMNode | string | null | undefined)[],
+  container: HTMLElement,
+): PortalVDOMNode {
+  return {
+    type: DOM_TYPES.PORTAL,
+    children: mapTextNodes(withoutNulls(vNodes)),
+    props: {},
+    container,
   };
 }
 

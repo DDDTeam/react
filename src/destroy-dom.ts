@@ -3,6 +3,7 @@ import type {
   ComponentVDOMNode,
   ElementVDOMNode,
   FragmentVDOMNode,
+  PortalVDOMNode,
   TextVDOMNode,
   VDOMNode,
 } from './types';
@@ -27,6 +28,9 @@ export function destroyDOM(vdom: VDOMNode): void {
     case DOM_TYPES.COMPONENT: {
       (vdom as ComponentVDOMNode).component?.unmount();
       break;
+    }
+    case DOM_TYPES.PORTAL: {
+      removePortalNode(vdom as PortalVDOMNode);
     }
     default: {
       throw new Error(`Can't destroy DOM of type: ${type}`);
@@ -65,6 +69,14 @@ function removeElementNode(vdom: ElementVDOMNode): void {
 }
 
 function removeFragmentNodes(vdom: FragmentVDOMNode): void {
+  const {children} = vdom;
+
+  if (children) {
+    children.forEach(destroyDOM);
+  }
+}
+
+function removePortalNode(vdom: PortalVDOMNode) {
   const {children} = vdom;
 
   if (children) {

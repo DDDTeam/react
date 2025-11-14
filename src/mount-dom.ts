@@ -6,6 +6,7 @@ import type {
   ComponentVDOMNode,
   ElementVDOMNode,
   FragmentVDOMNode,
+  PortalVDOMNode,
   TextVDOMNode,
   VDOMNode,
 } from './types';
@@ -37,6 +38,10 @@ export function mountDOM(
       if (component) {
         enqueueJob(() => component.onMount());
       }
+      break;
+    }
+    case DOM_TYPES.PORTAL: {
+      createPortalNode(vdom as PortalVDOMNode, hostComponent);
       break;
     }
     default: {
@@ -131,4 +136,12 @@ function insert(el: Node, parentEl: HTMLElement, index: number | null): void {
   } else {
     parentEl.insertBefore(el, children[index]);
   }
+}
+
+function createPortalNode(vdom: PortalVDOMNode, hostComponent: Component | null) {
+  const {children, container} = vdom;
+
+  children?.forEach(child => {
+    mountDOM(child, container, null, hostComponent);
+  });
 }
