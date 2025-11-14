@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/DDDTeam/react/compare/v1.4.2...v1.5.0) (2025-11-14)
+
+
+### Features
+
+* add portals ([624e88d](https://github.com/DDDTeam/react/commit/624e88da9a08768ba213b0d2313ae667b149ba55))
+
 ## [1.4.2](https://github.com/DDDTeam/react/compare/v1.4.1...v1.4.2) (2025-11-13)
 
 
