@@ -6,6 +6,7 @@ import {patchDOM} from './patch-dom.js';
 import {enqueueJob} from './scheduler.js';
 import type {ComponentState, Context, VDOMNode, WithChildrenProps} from './types';
 import {DOM_TYPES} from './types';
+import {isConsumer, isProvider} from './utils/context';
 
 export abstract class Component<P = {}, S = ComponentState, ContextValueType = null> {
   private isMounted = false;
@@ -18,9 +19,38 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   public context: ContextValueType = null as ContextValueType;
 
+  public dependencies: {consumer: Component}[] = [];
+  public subscribedProvider: Component | null = null;
+
   constructor(props = {} as P, parentComponent: Component | null) {
     this.props = props as P & WithChildrenProps;
     this.parent = parentComponent;
+  }
+
+  addDependency({consumer}: {consumer: Component}) {
+    if (!this.dependencies.some(d => d.consumer === consumer)) {
+      this.dependencies.push({consumer});
+      consumer.subscribedProvider = this as Component;
+    }
+  }
+
+  removeDependency({consumer}: {consumer: Component}) {
+    const index = this.dependencies.findIndex(dep => dep.consumer === consumer);
+    if (index !== -1) {
+      this.dependencies.splice(index, 1);
+      consumer.subscribedProvider = null;
+    }
+  }
+
+  notify() {
+    this.dependencies.forEach(({consumer}) => {
+      if ((consumer as any).isMounted) {
+        const changed = consumer.updateContext();
+        if (changed) {
+          consumer.patch();
+        }
+      }
+    });
   }
 
   onMount(): void | Promise<void> {
@@ -71,13 +101,19 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   updateProps(props: Partial<P>): void {
     const newProps = {...this.props, ...props};
+    const oldProps = this.props;
+
+    this.props = newProps;
 
     let isContextUpdated = this.updateContext();
-    if (isEqual(this.props, newProps) && !isContextUpdated) {
+    if (isEqual(oldProps, newProps) && !isContextUpdated) {
       return;
     }
 
-    this.props = newProps;
+    if (isProvider(this as Component)) {
+      this.notify();
+    }
+
     this.patch();
   }
 
@@ -97,7 +133,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     if (this.isMounted) {
       throw new Error('Component is already mounted');
     }
-
+    if (isConsumer(this as Component) && !this.subscribedProvider) {
+      this.subscribeToProvider();
+    }
     this.updateContext();
 
     this.vdom = this.render();
@@ -112,6 +150,14 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     }
 
     enqueueJob(() => this.onWillUnmount());
+    if (this.subscribedProvider) {
+      this.subscribedProvider.removeDependency({consumer: this as Component});
+    }
+
+    this.dependencies.forEach(({consumer}) => {
+      consumer.subscribedProvider = null;
+    });
+    this.dependencies = [];
 
     if (this.vdom) {
       destroyDOM(this.vdom);
@@ -154,5 +200,23 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     }
 
     return false;
+  }
+
+  private subscribeToProvider(): void {
+    const context = Object.getPrototypeOf(this).constructor
+      .contextType as Context<ContextValueType>;
+
+    if (!context) {
+      return;
+    }
+
+    let curVNode: Component | null | undefined = this.parent;
+    while (curVNode) {
+      if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
+        curVNode.addDependency({consumer: this as Component});
+        break;
+      }
+      curVNode = curVNode.parent;
+    }
   }
 }

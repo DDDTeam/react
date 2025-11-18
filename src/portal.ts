@@ -1,5 +1,5 @@
-import {hPortal} from './h.ts';
-import type {PortalVDOMNode, VDOMNode} from './types/vdom.ts';
+import {hPortal} from './h';
+import type {PortalVDOMNode, VDOMNode} from './types/vdom';
 
 export function createPortal(
   children: VDOMNode | VDOMNode[],
