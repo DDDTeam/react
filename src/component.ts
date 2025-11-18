@@ -6,6 +6,7 @@ import {patchDOM} from './patch-dom.js';
 import {enqueueJob} from './scheduler.js';
 import type {ComponentState, Context, VDOMNode, WithChildrenProps} from './types';
 import {DOM_TYPES} from './types';
+import {isProvider} from './utils/context';
 
 export abstract class Component<P = {}, S = ComponentState, ContextValueType = null> {
   private isMounted = false;
@@ -18,9 +19,35 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   public context: ContextValueType = null as ContextValueType;
 
+  public dependencies: {consumer: Component}[] = [];
+  public subscribedProvider: Component | null = null;
+
   constructor(props = {} as P, parentComponent: Component | null) {
     this.props = props as P & WithChildrenProps;
     this.parent = parentComponent;
+  }
+
+  addDependency({consumer}: {consumer: Component}) {
+    if (!this.dependencies.includes({consumer})) {
+      this.dependencies.push({consumer});
+      consumer.subscribedProvider = this as Component;
+    }
+  }
+
+  removeDependency({consumer}: {consumer: Component}) {
+    const index = this.dependencies.indexOf({consumer});
+    if (index !== -1) {
+      this.dependencies.splice(index, 1);
+      consumer.subscribedProvider = null;
+    }
+  }
+
+  notify() {
+    this.dependencies.forEach(({consumer}) => {
+      if (consumer.isMounted) {
+        consumer.patch();
+      }
+    });
   }
 
   onMount(): void | Promise<void> {
@@ -77,6 +104,10 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       return;
     }
 
+    if (isProvider(this as Component)) {
+      this.notify();
+    }
+
     this.props = newProps;
     this.patch();
   }
@@ -112,6 +143,14 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     }
 
     enqueueJob(() => this.onWillUnmount());
+    if (this.subscribedProvider) {
+      this.subscribedProvider.removeDependency({consumer: this as Component});
+    }
+
+    this.dependencies.forEach(({consumer}) => {
+      consumer.subscribedProvider = null;
+    });
+    this.dependencies = [];
 
     if (this.vdom) {
       destroyDOM(this.vdom);
@@ -137,10 +176,18 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     const context = Object.getPrototypeOf(this).constructor
       .contextType as Context<ContextValueType>;
 
+    if (!context) {
+      return false;
+    }
+    if (this.subscribedProvider) {
+      this.subscribedProvider.removeDependency({consumer: this as Component});
+    }
+
     let curVNode: Component | null | undefined = this.parent;
     if (context != null) {
       while (curVNode) {
         if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
+          curVNode.addDependency({consumer: this as Component});
           this.context = (curVNode as any).props.value as ContextValueType;
           return true;
         }
