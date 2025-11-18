@@ -1,3 +1,18 @@
+# [1.6.0](https://github.com/DDDTeam/react/compare/v1.5.1...v1.6.0) (2025-11-18)
+
+
+### Bug Fixes
+
+* change version ([48c6ae7](https://github.com/DDDTeam/react/commit/48c6ae7bf6944e42fb1d114c27838608e12e71a4))
+* refactor subscribe logic ([07116c0](https://github.com/DDDTeam/react/commit/07116c010d07b0c8855ebfa3047a296080c446c3))
+* remove .ts from the ends of the imports ([58d4062](https://github.com/DDDTeam/react/commit/58d40627f1039979862025562fb952a676acb69d))
+* remove as any ([ec15cd6](https://github.com/DDDTeam/react/commit/ec15cd62861556981292858e0a947e1e5cb8e9d9))
+
+
+### Features
+
+* rewrite context to subscribe logic ([fd276d8](https://github.com/DDDTeam/react/commit/fd276d8cd61cadde9fce4deed7a596d7001f2f19))
+
 ## [1.5.1](https://github.com/DDDTeam/react/compare/v1.5.0...v1.5.1) (2025-11-14)
 
 
