@@ -35,7 +35,12 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   removeDependency({consumer}: {consumer: Component}) {
-    const index = this.dependencies.indexOf({consumer});
+    let index = -1;
+    this.dependencies.forEach((dep, i) => {
+      if (isEqual(dep.consumer, consumer)) {
+        index = i;
+      }
+    });
     if (index !== -1) {
       this.dependencies.splice(index, 1);
       consumer.subscribedProvider = null;
