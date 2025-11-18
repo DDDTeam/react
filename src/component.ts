@@ -44,7 +44,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   notify() {
     this.dependencies.forEach(({consumer}) => {
-      if ((consumer as any).isMounted) {
+      if (consumer.isMounted) {
         const changed = consumer.updateContext();
         if (changed) {
           consumer.patch();
