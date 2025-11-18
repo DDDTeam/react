@@ -6,7 +6,7 @@ import {patchDOM} from './patch-dom.js';
 import {enqueueJob} from './scheduler.js';
 import type {ComponentState, Context, VDOMNode, WithChildrenProps} from './types';
 import {DOM_TYPES} from './types';
-import {isProvider} from './utils/context';
+import {isConsumer, isProvider} from './utils/context';
 
 export abstract class Component<P = {}, S = ComponentState, ContextValueType = null> {
   private isMounted = false;
@@ -44,7 +44,7 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   notify() {
     this.dependencies.forEach(({consumer}) => {
-      if (consumer.isMounted) {
+      if ((consumer as any).isMounted) {
         const changed = consumer.updateContext();
         if (changed) {
           consumer.patch();
@@ -133,7 +133,9 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     if (this.isMounted) {
       throw new Error('Component is already mounted');
     }
-
+    if (isConsumer(this as Component) && !this.subscribedProvider) {
+      this.subscribeToProvider();
+    }
     this.updateContext();
 
     this.vdom = this.render();
@@ -181,18 +183,10 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     const context = Object.getPrototypeOf(this).constructor
       .contextType as Context<ContextValueType>;
 
-    if (!context) {
-      return false;
-    }
-    if (this.subscribedProvider) {
-      this.subscribedProvider.removeDependency({consumer: this as Component});
-    }
-
     let curVNode: Component | null | undefined = this.parent;
     if (context != null) {
       while (curVNode) {
         if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
-          curVNode.addDependency({consumer: this as Component});
           this.context = (curVNode as any).props.value as ContextValueType;
           return true;
         }
@@ -206,5 +200,23 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
     }
 
     return false;
+  }
+
+  private subscribeToProvider(): void {
+    const context = Object.getPrototypeOf(this).constructor
+      .contextType as Context<ContextValueType>;
+
+    if (!context) {
+      return;
+    }
+
+    let curVNode: Component | null | undefined = this.parent;
+    while (curVNode) {
+      if (Object.getPrototypeOf(curVNode).constructor === context.Provider) {
+        curVNode.addDependency({consumer: this as Component});
+        break;
+      }
+      curVNode = curVNode.parent;
+    }
   }
 }
