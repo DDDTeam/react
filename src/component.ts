@@ -28,19 +28,14 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
   }
 
   addDependency({consumer}: {consumer: Component}) {
-    if (!this.dependencies.includes({consumer})) {
+    if (!this.dependencies.some(d => d.consumer === consumer)) {
       this.dependencies.push({consumer});
       consumer.subscribedProvider = this as Component;
     }
   }
 
   removeDependency({consumer}: {consumer: Component}) {
-    let index = -1;
-    this.dependencies.forEach((dep, i) => {
-      if (isEqual(dep.consumer, consumer)) {
-        index = i;
-      }
-    });
+    const index = this.dependencies.findIndex(dep => dep.consumer === consumer);
     if (index !== -1) {
       this.dependencies.splice(index, 1);
       consumer.subscribedProvider = null;
@@ -49,8 +44,11 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   notify() {
     this.dependencies.forEach(({consumer}) => {
-      if (consumer.isMounted) {
-        consumer.patch();
+      if ((consumer as any).isMounted) {
+        const changed = consumer.updateContext();
+        if (changed) {
+          consumer.patch();
+        }
       }
     });
   }
@@ -103,9 +101,12 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
 
   updateProps(props: Partial<P>): void {
     const newProps = {...this.props, ...props};
+    const oldProps = this.props;
+
+    this.props = newProps;
 
     let isContextUpdated = this.updateContext();
-    if (isEqual(this.props, newProps) && !isContextUpdated) {
+    if (isEqual(oldProps, newProps) && !isContextUpdated) {
       return;
     }
 
@@ -113,7 +114,6 @@ export abstract class Component<P = {}, S = ComponentState, ContextValueType = n
       this.notify();
     }
 
-    this.props = newProps;
     this.patch();
   }
 
